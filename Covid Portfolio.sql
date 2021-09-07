@@ -40,6 +40,33 @@ FROM PortfolioProject..Cases
 GROUP BY location
 ORDER BY PercentDeaths DESC
 
+--Totals for North America (Used for Visualization)
+Select SUM(new_cases) as total_cases, 
+SUM(cast(new_deaths as int)) as total_deaths, 
+SUM(cast(new_deaths as int))/SUM(New_Cases)*100 as DeathPercentage
+From PortfolioProject..Cases
+order by 1,2
+
+--Total Deaths by Country (Used for Visualization)
+Select location, SUM(cast(new_deaths as int)) as TotalDeathCount
+From PortfolioProject..Cases
+--Where location like '%states%'
+Group by location
+order by TotalDeathCount desc
+
+--Country broken down by Population, # of Cases & Percentage Infected (Used for Visualization)
+Select Location, Population, MAX(total_cases) as HighestInfectionCount,
+Max((total_cases/population))*100 as PercentPopulationInfected
+From PortfolioProject..Cases
+Group by Location, Population
+order by PercentPopulationInfected desc
+
+--Progression of Population Infected (Used for Visualization)
+Select Location, Population,date, MAX(total_cases) as HighestInfectionCount,  Max((total_cases/population))*100 as PercentPopulationInfected
+From PortfolioProject..Cases
+--Where location like '%states%'
+Group by Location, Population, date
+order by PercentPopulationInfected desc
 
 --Total Population vs Vaccinations
 --CTE
